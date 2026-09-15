@@ -39,7 +39,7 @@ module ecc_data_mem (
             for (int i = 0; i < MEM_WORDS; i++)
                 mem[i] <= '0;
         end
-        else if (memwrite && mem_sel) begin      gated write
+        else if (memwrite && mem_sel) begin      //gated write
             mem[word_addr] <= enc_codeword;
         end
     end
@@ -64,7 +64,7 @@ module ecc_data_mem (
 
     assign rd = dec_data;
 
-     only report errors when this memory is actually the target device
+    // only report errors when this memory is actually the target device
     assign qual_single = dec_single && mem_sel;
     assign qual_double = dec_double && mem_sel;
 

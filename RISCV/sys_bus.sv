@@ -27,7 +27,7 @@ module sys_bus (
         .clk                  (clk),
         .reset                (reset),
         .memwrite             (memwrite),
-        .mem_sel              (ram_en),      gates writes + error status
+        .mem_sel              (ram_en),      //gates writes + error status
         .addr                 (addr),
         .wd                   (write_data),
         .rd                   (ram_rd),
