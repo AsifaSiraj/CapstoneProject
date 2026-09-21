@@ -12,7 +12,7 @@ module alu_control (
                 case (fun3)
                     3'b000: alu_control = 3'd1; // BEQ
                     3'b001: alu_control = 3'd1; // BNE
-                    3'b100: alu_control = 3'd1; // BLT (FIXED: was SLT=3'd4)
+                    3'b100: alu_control = 3'd1; // BLT 
                     3'b101: alu_control = 3'd1; // BGE
                     default: alu_control = 3'd1;
                 endcase
