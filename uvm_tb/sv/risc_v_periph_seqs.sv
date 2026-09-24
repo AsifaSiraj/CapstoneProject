@@ -51,5 +51,30 @@ class risc_v_spi_echo_seq extends uvm_sequence #(risc_v_periph_seq_item);
         finish_item(req);
     endtask
 endclass
+// ------------------------------------------------------------------
+// 4) Varying rotor speed for RPM period coverage
+// ------------------------------------------------------------------
+class risc_v_tach_sweep_seq extends uvm_sequence #(risc_v_periph_seq_item);
+    `uvm_object_utils(risc_v_tach_sweep_seq)
+
+    bit [15:0] periods[] = '{16'd20, 16'd40, 16'd60};
+
+    function new(string name = "risc_v_tach_sweep_seq");
+        super.new(name);
+    endfunction
+
+    task body();
+        risc_v_periph_seq_item req;
+        foreach (periods[i]) begin
+            req = risc_v_periph_seq_item::type_id::create("req");
+            start_item(req);
+            req.tach_on     = 1'b1;
+            req.tach_period = periods[i];
+            req.miso_mode   = SPI_LOOPBACK;
+            finish_item(req);
+            #1000;                          // let the DUT settle at this speed
+        end
+    endtask
+endclass
 
 `endif
