@@ -120,16 +120,11 @@ The `filelist.f` compiles all 18 RTL modules plus the UVM interface, package,
 and top:
 
 ```bash
-# One command: compile + run ALL 7 UVM tests (Windows)
-uvm_tb\sim\run_tests.bat
-```
-
-```bash
 # Manual compile + run a single test (identical to the .bat):
 vlib work
 vlog -sv +incdir+uvm_tb\sv -f uvm_tb\sim\filelist.f
 vsim -c work.risc_v_uvm_tb +UVM_TESTNAME=risc_v_golden_test \
-     +UVM_VERBOSITY=UVM_MEDIUM -do "run -all; quit -f"
+     +UVM_VERBOSITY=UVM_MEDIUM -do "run -all"
 ```
 
 Or let the provided Tcl script do the compile-and-run for you (it cleans the
@@ -158,7 +153,7 @@ vlog -sv risc_v.sv pc.sv adder.sv mux.sv instr_mem.sv reg_file.sv "imm_ext .sv" 
         alu.sv control_unit.sv alu_control.sv cu.sv sys_bus.sv ecc_encoder.sv \
         ecc_decoder.sv ecc_data_mem.sv fault_injector.sv error_status_reg.sv \
         peripherals.sv ecc_data_mem_tb.sv
-vsim -c work.ecc_data_mem_tb -do "run -all; quit -f"
+vsim -c work.ecc_data_mem_tb -do "run -all"
 
 # Full SoC directed testbench
 vlib work
@@ -166,7 +161,7 @@ vlog -sv risc_v.sv pc.sv adder.sv mux.sv instr_mem.sv reg_file.sv "imm_ext .sv" 
         alu.sv control_unit.sv alu_control.sv cu.sv sys_bus.sv ecc_encoder.sv \
         ecc_decoder.sv ecc_data_mem.sv fault_injector.sv error_status_reg.sv \
         peripherals.sv risc_v_tb.sv
-vsim -c work.risc_v_tb -do "run -all; quit -f"
+vsim -c work.risc_v_tb -do "run -all"
 ```
 
 > Note: `imm_ext .sv` has a space in its filename, so quote it exactly as shown.
