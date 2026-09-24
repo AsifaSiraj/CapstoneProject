@@ -64,7 +64,7 @@ module ecc_data_mem (
 
     assign rd = dec_data;
 
-    // only report errors when this memory is actually the target device
+     //only report errors when this memory is actually the target device
     assign qual_single = dec_single && mem_sel;
     assign qual_double = dec_double && mem_sel;
 

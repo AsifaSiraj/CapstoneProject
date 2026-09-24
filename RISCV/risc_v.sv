@@ -22,7 +22,27 @@ module risc_v (
     output logic        single_err_corrected,
     output logic        double_err_detected,
     output logic [31:0] error_addr,
-    output logic [31:0] peripheral_reg_out
+    output logic [31:0] peripheral_reg_out,
+    // ---- peripheral I/O ----
+    input  logic        tach_in,
+    input  logic        spi_miso,
+    output logic        spi_sck,
+    output logic        spi_mosi,
+    output logic        spi_cs,
+    output logic        pwm_out,
+    output logic        spi_busy,
+    output logic        stall,
+    output logic        fail_safe_active,
+    // ---- observability (UVM black-box checks) ----
+    output logic [7:0]  spi_rx_out,
+    output logic        spi_done_out,
+    output logic [15:0] pwm_period_out,
+    output logic [15:0] pwm_duty_out,
+    output logic [31:0] rpm_period_out,
+    output logic        rpm_valid_out,
+    output logic        profile_loaded_out,
+    output logic        profile_active_out,
+    output logic        wdt_timeout_out
 );
     logic [31:0] pc_next, pc_4, pc_target;
     logic [31:0] rd1, rd2, result;
@@ -77,7 +97,25 @@ module risc_v (
         .single_err_corrected(single_err_corrected),
         .double_err_detected (double_err_detected),
         .error_addr          (error_addr),
-        .peripheral_reg_out  (peripheral_reg_out)
+        .peripheral_reg_out  (peripheral_reg_out),
+        .tach_in             (tach_in),
+        .spi_miso            (spi_miso),
+        .spi_sck             (spi_sck),
+        .spi_mosi            (spi_mosi),
+        .spi_cs              (spi_cs),
+        .pwm_out             (pwm_out),
+        .spi_busy            (spi_busy),
+        .stall               (stall),
+        .fail_safe_active    (fail_safe_active),
+        .spi_rx_out          (spi_rx_out),
+        .spi_done_out        (spi_done_out),
+        .pwm_period_out      (pwm_period_out),
+        .pwm_duty_out        (pwm_duty_out),
+        .rpm_period_out      (rpm_period_out),
+        .rpm_valid_out       (rpm_valid_out),
+        .profile_loaded_out  (profile_loaded_out),
+        .profile_active_out  (profile_active_out),
+        .wdt_timeout_out     (wdt_timeout_out)
     );
 
     // -------- Write-back --------
