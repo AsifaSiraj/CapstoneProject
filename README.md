@@ -121,17 +121,19 @@ and top:
 
 ```bash
 # Manual compile + run a single test (identical to the .bat):
+cd "E:/ICS_CHIP/MyCapstone/uvm_tb" 
 vlib work
-vlog -sv +incdir+uvm_tb\sv -f uvm_tb\sim\filelist.f
-vsim -c work.risc_v_uvm_tb +UVM_TESTNAME=risc_v_golden_test \
-     +UVM_VERBOSITY=UVM_MEDIUM -do "run -all"
+vlog -sv +incdir+sv -f sim/filelist.f
+vsim work.risc_v_uvm_tb +UVM_TESTNAME=risc_v_golden_test +UVM_VERBOSITY=UVM_MEDIUM -do "view wave; add wave -r sim:/risc_v_uvm_tb/*; run -all"
 ```
 
 Or let the provided Tcl script do the compile-and-run for you (it cleans the
 `work` library first):
 
 ```bash
-vsim -c -do "set UVM_TESTNAME risc_v_golden_test; do uvm_tb/sim/run.tcl"
+cd "E:/ICS_CHIP/MyCapstone/uvm_tb" 
+set UVM_TESTNAME risc_v_golden_test
+do sim/run.tcl
 ```
 
 The test name is selected with `+UVM_TESTNAME=...` — pick any of:
