@@ -14,29 +14,7 @@ module sys_bus (
     output logic        single_err_corrected,
     output logic        double_err_detected,
     output logic [31:0] error_addr,
-    output logic [31:0] peripheral_reg_out,
-
-    // ---- peripheral I/O ----
-    input  logic        tach_in,
-    input  logic        spi_miso,
-    output logic        spi_sck,
-    output logic        spi_mosi,
-    output logic        spi_cs,
-    output logic        pwm_out,
-    output logic        spi_busy,
-    output logic        stall,
-    output logic        fail_safe_active,
-
-    // ---- observability (UVM black-box checks) ----
-    output logic [7:0]  spi_rx_out,
-    output logic        spi_done_out,
-    output logic [15:0] pwm_period_out,
-    output logic [15:0] pwm_duty_out,
-    output logic [31:0] rpm_period_out,
-    output logic        rpm_valid_out,
-    output logic        profile_loaded_out,
-    output logic        profile_active_out,
-    output logic        wdt_timeout_out
+    output logic [31:0] peripheral_reg_out
 );
     logic ram_en, mmio_en;
     logic [31:0] ram_rd, mmio_rd;
@@ -62,35 +40,14 @@ module sys_bus (
         .error_addr           (error_addr)
     );
 
-    peripherals PERIPH (
-        .clk                  (clk),
-        .reset                (reset),
-        .memwrite             (memwrite),
-        .mmio_en              (mmio_en),
-        .addr                 (addr),
-        .write_data           (write_data),
-        .rd                   (mmio_rd),
-        .double_err_detected  (double_err_detected),
-        .tach_in              (tach_in),
-        .spi_miso             (spi_miso),
-        .spi_sck              (spi_sck),
-        .spi_mosi             (spi_mosi),
-        .spi_cs               (spi_cs),
-        .pwm_out              (pwm_out),
-        .peripheral_reg_out   (peripheral_reg_out),
-        .spi_busy             (spi_busy),
-        .stall                (stall),
-        .fail_safe_active     (fail_safe_active),
-        .spi_rx_out           (spi_rx_out),
-        .spi_done_out         (spi_done_out),
-        .pwm_period_out       (pwm_period_out),
-        .pwm_duty_out         (pwm_duty_out),
-        .rpm_period_out       (rpm_period_out),
-        .rpm_valid_out        (rpm_valid_out),
-        .profile_loaded_out   (profile_loaded_out),
-        .profile_active_out   (profile_active_out),
-        .wdt_timeout_out      (wdt_timeout_out)
-    );
+    always_ff @(posedge clk or posedge reset) begin
+        if (reset)
+            peripheral_reg_out <= 32'h0;
+        else if (memwrite && mmio_en)
+            peripheral_reg_out <= write_data;
+    end
 
+    assign mmio_rd   = peripheral_reg_out;
     assign read_data = mmio_en ? mmio_rd : ram_rd;
 endmodule
+
