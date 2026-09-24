@@ -64,7 +64,7 @@ MyCapstone/
 │   ├── risc_v_tb.sv               <- legacy directed (non-UVM) SoC testbench
 │   └── ecc_data_mem_tb.sv         <- legacy directed ECC memory unit testbench
 ├── docs/
-│   ├── MyCapstone_Technical_Documentation.md  <- full engineering doc + report
+│   ├── MyCapstone_Technical_Documentation.docx  <- full engineering doc + report
 │   └── MyCapstone_Project_Presentation.pptx
 ├── uvm_tb/
 │   ├── README.md                  <- detailed UVM environment documentation
@@ -86,8 +86,7 @@ MyCapstone/
 │   │   ├── run.tcl                <- compile + run one test (Questa/ModelSim)
 │   │   └── run_tests.bat          <- compile once + run all 7 tests (Windows)
 │   ├── waves/                     <- optional VCD waveform dump
-│   └── work/                      <- Questa compiled library (generated)
-└── work/                          <- alternative compiled library (generated)
+
 ```
 
 ---
