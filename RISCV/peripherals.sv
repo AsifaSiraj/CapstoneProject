@@ -16,7 +16,13 @@
 //   0x8000_002C  PROFILE_CTRL w    bit0=LOAD
 //   0x8000_0030..4C PROFILE[7:0] w profile payload entries
 //   0x8000_0050  PROFILE_STAT r    bit0=LOADED, bit1=ACTIVE
-
+//   0x8000_0054  FS_CTRL      w    bit0=WDT_EN (watchdog enable)
+//   0x8000_0058  FS_STAT      r    bit0=FAIL_SAFE, bit1=WDT_TIMEOUT
+//
+// Fail-safe behaviour (FAIL_SAFE latches until reset):
+//   -> triggers on uncorrectable ECC double-bit error (double_err_detected)
+//   -> triggers on watchdog timeout (no tach edge within 256 cycles of WDT_EN)
+//   -> while FAIL_SAFE is latched, PWM output is forced off.
 // ======================================================================
 module peripherals (
     input  logic        clk,
@@ -245,7 +251,41 @@ module peripherals (
         end
     end
 
+    // ==================== watch-dog / fail-safe ====================
+    logic [7:0]  wdt_cnt;
+    logic        wdt_timeout_reg;
+    logic        fail_safe_reg;
+    logic        wdt_en_reg_i;
 
+    always_ff @(posedge clk or posedge reset) begin
+        if (reset) begin
+            wdt_en_reg_i   <= 1'b0;
+            wdt_cnt        <= 8'd0;
+            wdt_timeout_reg <= 1'b0;
+            fail_safe_reg  <= 1'b0;
+        end
+        else begin
+            // latch fail-safe trigger inputs
+            if (double_err_detected) fail_safe_reg <= 1'b1;
+            if (wr && is_fsc && write_data[0]) begin
+                wdt_en_reg_i <= 1'b1;
+                wdt_cnt      <= 8'd0;
+                wdt_timeout_reg <= 1'b0;
+            end
+            if (wdt_en_reg_i && !wdt_timeout_reg) begin
+                if (tach_rise)
+                    wdt_cnt <= 8'd0;
+                else if (wdt_cnt == 8'hFF) begin
+                    wdt_timeout_reg <= 1'b1;
+                    fail_safe_reg   <= 1'b1;
+                end
+                else
+                    wdt_cnt <= wdt_cnt + 8'd1;
+            end
+        end
+    end
+
+    assign fail_safe_active = fail_safe_reg;
 
     // ==================== stall detection ====================
     wire spi_block  = mmio_en && (wo >= 10'h001) && (wo <= 10'h004);
