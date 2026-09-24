@@ -172,20 +172,12 @@ vsim -c work.risc_v_tb -do "run -all"
 
 ## How to Run the Tests
 
-### UVM regression (all 7 tests)
-
-```bash
-uvm_tb\sim\run_tests.bat
-```
-
-This cleans and compiles the design once, then runs each test to completion,
-writing a transcript to `uvm_tb\sim\<test>.log` and printing `[PASS]`/`[FAIL]`
-per test. A test passes when its log contains `*** TEST PASSED ***`.
-
 ### Individual UVM test
 
 ```bash
-vsim -c -do "set UVM_TESTNAME risc_v_double_bit_test; do sim/run.tcl"
+cd "E:/ICS_CHIP/MyCapstone/uvm_tb" 
+set UVM_TESTNAME risc_v_double_bit_test
+do sim/run.tcl
 ```
 
 ### What each test verifies
