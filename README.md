@@ -195,8 +195,17 @@ do sim/run.tcl
 ### Legacy tests
 
 ```bash
-vsim -c work.ecc_data_mem_tb -do "run -all; quit -f"
-vsim -c work.risc_v_tb        -do "run -all; quit -f"
+vsim -voptargs="+acc" work.ecc_data_mem_tb
+view wave
+add wave -r sim:/ecc_data_mem_tb/*
+run -all
+wave zoom full
+
+vsim -voptargs="+acc" work.risc_v_tb
+view wave
+add wave -r sim:/risc_v_tb/*
+run -all
+wave zoom full
 ```
 
 ### Expected transcript output
@@ -222,8 +231,9 @@ QuestaSim 2024.x (or ModelSim with UVM):
    `C:\questasim64_2024.1\win64`).
 2. From the project root, run:
 
-   ```bash
-   uvm_tb\sim\run_tests.bat
+   ```PowerShell
+   cd E:\ICS_CHIP\MyCapstone
+   .\uvm_tb\sim\run_tests.bat
    ```
 
 3. Confirm every line reads `[PASS]` and every `sim\*.log` contains
